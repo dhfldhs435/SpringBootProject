@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ebookmarket.client.mapper.EbookMapper">
+
+
+	<!-- 등록 처리 -->
+	<insert id="create"> insert into ebook_tbl
+		(
+		e_num,
+		s_num,
+		e_title,
+		e_post_introduce,
+		e_writer,
+		e_profile,
+		e_age_limit,
+		e_category,
+		e_table_content,
+		e_coverimage_url,
+		e_attachment_url,
+		e_attachment_type,
+		e_thumbnail_url,
+		e_price
+		)
+		values
+		(
+		ebook_seq.nextval,
+		#{s_num},
+		#{e_title},
+		#{e_post_introduce},
+		#{e_writer},
+		#{e_profile},
+		#{e_age_limit},
+		#{e_category},
+		#{e_table_content},
+		#{e_coverimage_url},
+		#{e_attachment_url},
+		#{e_attachment_type},
+		#{e_thumbnail_url},
+		#{e_price}
+		)
+	</insert>
+
+	<!-- 게시물 리스트 출력 -->
+	<select id="list"
+		resultType="com.ebookmarket.client.domain.Ebook">
+		<![CDATA[
+		select *
+		
+		from ebook_tbl
+		
+		where
+		 e_status ='regapproval'
+		
+		order by e_reg_date desc
+		]]>
+	</select>
+
+	<!-- 게시물 리스트 출력 -->
+	<select id="uploadList"
+		resultType="com.ebookmarket.client.domain.Ebook">
+		<![CDATA[
+		select *
+		
+		from ebook_tbl
+		
+		where
+		s_num = #{s_num}
+		
+		order by e_reg_date desc
+		]]>
+	</select>
+
+	<!-- 상품 상세 조회 -->
+	<select id="read"
+		resultType="com.ebookmarket.client.domain.Ebook">
+
+		select *
+
+		from ebook_tbl
+
+		where e_num = #{e_num}
+
+	</select>
+
+	<!-- 조회수 증가 -->
+	<update id="view_cnt">
+		update ebook_tbl
+		set e_view_cnt = e_view_cnt + 1
+		where
+		e_num = #{e_num}
+	</update>
+
+	<!-- 상품 삭제 처리 -->
+	<delete id="delete">
+
+		delete from ebook_tbl
+
+		where e_num = #{e_num}
+
+	</delete>
+
+	<!-- 원본 이미지 표시 -->
+	<select id="getCover" resultType="String">
+
+		select e_coverimage_url
+		from
+		ebook_tbl
+		where e_num = #{e_num}
+
+	</select>
+
+	<!-- 미리보기 이미지 표시 -->
+	<select id="getPreview" resultType="String">
+
+		select e_thumbnail_url
+		from
+		ebook_tbl
+		where e_num = #{e_num}
+
+	</select>
+
+
+
+
+</mapper>

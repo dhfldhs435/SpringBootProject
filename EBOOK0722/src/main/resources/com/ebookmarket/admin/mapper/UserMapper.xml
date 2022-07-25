@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ebookmarket.admin.mapper.UserMapper">
+	<!-- 판매자회원 목록 조회 -->
+	<select id="sellerlist"
+		resultType="com.ebookmarket.admin.domain.User">
+	<![CDATA[
+		SELECT se.s_num,
+			s_join_date,
+			s_id,
+			s_name,
+			s_resident_num,
+			s_email,
+			s_phone,
+			s_grade,
+			count(e_num) as creation_reg_cnt,
+			sum(e_sell_cnt) as e_sell_cnt
+		FROM seller_tbl se left outer join ebook_tbl eb ON se.s_num = eb.s_num
+		GROUP BY se.s_num, s_join_date, s_id, s_name, s_resident_num, s_email, s_phone, s_grade
+		ORDER BY s_num DESC
+	]]>
+	</select>
+
+	<!-- 탈퇴한 판매자회원 목록 조회 -->
+	<select id="sellerresignlist"
+		resultType="com.ebookmarket.admin.domain.User">
+	<![CDATA[
+		SELECT st.s_num,
+			s_quit_date,
+			s_id,
+			s_nickname,
+			s_name,
+			s_resident_num,
+			s_email,
+			s_phone,
+			s_quit_reason
+		FROM seller_tbl st INNER JOIN seller_auth sa ON st.s_num = sa.s_num
+		WHERE auth = 'ROLE_QUIT'
+	]]>
+	</select>
+
+	<!-- 일반회원 목록 조회 -->
+	<select id="memberlist"
+		resultType="com.ebookmarket.admin.domain.User">
+	<![CDATA[
+		SELECT me.m_num,
+			m_join_date,
+			m_id,
+			m_name,
+			m_resident_num,
+			m_mail,
+			sum(p_total) as totalPayment,
+			count(p_num) as purchase_cnt
+		FROM member_tbl me left outer join purchase_tbl pu ON me.m_num = pu.m_num
+		GROUP BY me.m_num, m_join_date, m_id, m_name, m_resident_num, m_mail
+		ORDER BY m_num DESC
+	]]>
+	</select>
+
+	<!-- 탈퇴한 일반회원 목록 조회 -->
+	<select id="memberresignlist"
+		resultType="com.ebookmarket.admin.domain.User">
+	<![CDATA[
+		SELECT mt.m_num,
+			m_quit_date,
+			m_id,
+			m_name,
+			m_resident_num,
+			m_mail,
+			m_quit_reason
+		FROM member_tbl mt INNER JOIN member_auth ma ON mt.m_num = ma.m_num
+		WHERE auth = 'ROLE_QUIT'
+	]]>
+	</select>
+
+	<!-- 판매자회원 등급 설정 -->
+	<update id="setGrade">
+		UPDATE seller_tbl
+		SET s_grade = #{s_grade}
+		where s_num
+		= #{s_num}
+	</update>
+
+</mapper>

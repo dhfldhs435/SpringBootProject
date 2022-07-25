@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.ebookmarket.admin.mapper.AdminCategoryMapper">
+	<!-- 등록 처리 -->
+	<insert id="create">
+		INSERT INTO CATEGORY
+		(
+		category_code,
+		category_name
+		)
+		VALUES
+		(
+		#{category_code},
+		#{category_name}
+		)
+	</insert>
+
+	<!-- 목록 조회 -->
+	<select id="list"
+		resultType="com.ebookmarket.admin.domain.AdminCategory">
+		SELECT category_code,
+		category_name
+		FROM
+		CATEGORY
+		ORDER BY
+		category_code DESC
+	</select>
+
+	<!-- 상세 조회 -->
+	<select id="read"
+		resultType="com.ebookmarket.admin.domain.AdminCategory">
+		SELECT category_code,
+		category_name
+		FROM
+		CATEGORY
+		WHERE
+		category_code = #{category_code}
+	</select>
+
+	<!-- 수정 처리 -->
+	<update id="update">
+		UPDATE CATEGORY
+		SET category_name =#{category_name}
+		WHERE
+		category_code = #{category_code}
+	</update>
+
+	<!-- 삭제 처리 -->
+	<delete id="delete">
+		DELETE FROM CATEGORY
+		WHERE category_code =
+		#{category_code}
+	</delete>
+</mapper>
